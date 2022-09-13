@@ -1,15 +1,23 @@
 import csv
 
 input_filename = 'country_info.txt'
+
+dialect = csv.excel
+dialect.delimiter = '|'
+
 countries = {}
 with open(input_filename, encoding='utf-8', newline='') as country_file:
+    # get the column heading from first line of the file
+    headings = country_file.readline().strip('\n').split(dialect.delimiter)
+    for index, heading in enumerate(headings):
+        headings[index] = heading.casefold()
     # country_file.readline()
-    dict_reader = csv.DictReader(country_file, delimiter='|')
+    dict_reader = csv.DictReader(country_file, dialect=dialect, fieldnames=headings)
     for row in dict_reader:
         # countries[country.casefold()] = country_dict
-        countries[row['Country'].casefold()] = row
+        countries[row['country'].casefold()] = row
         # countries[code.casefold()] = country_dict
-        countries[row['CC'].casefold()] = row
+        countries[row['cc'].casefold()] = row
 
 
 print(countries)
